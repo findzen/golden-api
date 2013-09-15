@@ -18,12 +18,16 @@ day = int2 date.getDate()
 
 client.get "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json", (err, req, res, obj) ->
   server.get path: '/', (request, response, next) ->
+    go = true
+
+    JSON.parse(res.body).data.games.game.forEach (game) ->
+      if game.venue.match /dodger/i then go = false
+
     response.header 'Access-Control-Allow-Origin', '*'
-    
     response.send 
       url: "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json"
-      body: res.body
-      
+      go: go
+
     next()
 
 server.listen 3000, ->

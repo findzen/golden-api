@@ -38,5 +38,5 @@ client.get "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json",
 
     next()
 
-server.listen 3000, ->
-  console.log '%s listening at <%s>', server.name, server.url
+port = process.env.PORT or 3000
+server.listen port, -> console.log '%s listening at <%s>', server.name, server.url

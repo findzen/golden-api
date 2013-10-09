@@ -16,12 +16,20 @@ month = int2 date.getMonth() + 1
 day = int2 date.getDate()
 # day = int2 2 # uncomment to test a day with no games
 
+
+
 client.get "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json", (err, req, res, obj) ->
   server.get path: '/', (request, response, next) ->
     go = true
+    data = JSON.parse(res.body).data.games.game
 
-    JSON.parse(res.body).data.games.game.forEach (game) ->
-      if game.venue.match /dodger/i then go = false
+    isDodgerGame = (game) ->
+      game.venue.match /dodger/i
+
+    if Array.isArray data
+      data.forEach (game) -> if isDodgerGame game then go = false
+    else
+      if isDodgerGame data then go = false
 
     response.header 'Access-Control-Allow-Origin', '*'
     response.send 

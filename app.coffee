@@ -14,9 +14,6 @@ int2 = (int) ->
 date = new Date()
 month = int2 date.getMonth() + 1
 day = int2 date.getDate()
-# day = int2 2 # uncomment to test a day with no games
-
-
 
 client.get "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json", (err, req, res, obj) ->
   server.get path: '/', (request, response, next) ->
@@ -31,10 +28,13 @@ client.get "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json",
     else
       if isDodgerGame data then go = false
 
-    response.header 'Access-Control-Allow-Origin', '*'
-    response.send 
-      url: "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json"
-      go: go
+    if request.params.text
+      response.send if go then 'Fuck yeah' else 'Fuck no'
+    else
+      response.header 'Access-Control-Allow-Origin', '*'
+      response.send
+        url: "/components/game/mlb/year_2013/month_#{month}/day_#{day}/grid.json"
+        go: go
 
     next()
 
